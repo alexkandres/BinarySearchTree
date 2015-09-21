@@ -24,6 +24,23 @@ public class BSTNode
 		// Set this node's key value
 		m_nKeyValue = nKeyValue;
 	}
+	
+	public boolean isLeaf(){
+		
+		if(this.GetLeftNode() == null && this.GetRightNode() == null)
+			return true;
+		
+		return false;
+	}
+	
+	public boolean hasOneChild(){
+		
+		//exclusive or
+		if(this.GetLeftNode() == null ^ this.GetRightNode() == null)
+			return true;
+		
+		return false;
+	}
 
 	// Accessor method to set the root node.
 	public void setParent( BSTNode objParentNode)

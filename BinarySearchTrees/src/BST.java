@@ -14,62 +14,82 @@ public class BST
 	
 	public void Delete(int nValue){
 		
-		//get value node to be deleted
-		BSTNode deleteNode = Search(nValue);
-		
-		if(deleteNode != null)
-			Delete(deleteNode);
+			Delete(m_objRootNode, nValue);
 		
 	}
 	
-	public void Delete(BSTNode bstNode){
+	public boolean Delete(BSTNode node, int key){
 		
-		//if no child
-		if(bstNode.GetRightNode() == null && bstNode.GetLeftNode() == null)
-			deleteNoChildNode(bstNode);
 		
-		//if one child
-		else if(bstNode.GetRightNode() == null ^ bstNode.GetLeftNode() == null)
-			deleteOneChildNode(bstNode);
-				
-		//if two child
-		else if(bstNode.GetRightNode() != null && bstNode.GetLeftNode() != null)
-			deleteTwoChildNode(bstNode);
+		
+		if(node == null)
+			return false;
+		
+		//System.out.println("root "+node.GetKeyValue());
+		
+		int key2 = node.GetKeyValue();
+		
+		if(key2 < key){
+			node = node.GetLeftNode();
+		}
+		
+		else if(key2 > key){
+			node = node.GetRightNode();
+		}
+		
+		else if(node.GetKeyValue() == key){
+			System.out.println("Reached");
+			node.getParent().SetRightNode(null);
+			return true;
+		}
+			
+		
+		return Delete(node, key);
 	}
 
-	private void deleteNoChildNode(BSTNode bstNode) {
+	public BSTNode getParent(BSTNode root, BSTNode node){
 		
-		BSTNode tempNode = bstNode.getParent();
+		if(node == root || root == null){
+			return null;
+		}
+		
+		if(root.GetLeftNode() == node || root.GetLeftNode() == node){
+			return root;
+		}
+		
+		if(node.GetKeyValue() < root.GetKeyValue())
+			return getParent(root.GetLeftNode(), node);
+		
+		if(node.GetKeyValue() > root.GetKeyValue())
+			return getParent(root.GetRightNode(), node);
+		
+		return node;
+		
+	}
+	public void deleteNoChildNode(BSTNode bstNode) {
+		
+		
 
 		System.out.println("Reached here");
 		//this node is less than parent then swap left
 		if(bstNode.GetKeyValue() < bstNode.getParent().GetKeyValue()){
 			
-			//bstNode = bstNode.GetLeftNode();
+			BSTNode tempNode = bstNode.GetLeftNode();
+			bstNode.getParent().SetLeftNode(tempNode);;
 		}
 		
 		//swap this node with right if it is greater
 		else if(bstNode.GetKeyValue() > bstNode.getParent().GetKeyValue()){
 			
+			BSTNode tempNode = bstNode.GetRightNode();
+			bstNode.getParent().SetRightNode(tempNode);
 		}
-			bstNode = bstNode.GetRightNode();
-		
 		//set it to the right parent
-		bstNode.setParent(tempNode);
+		//bstNode.setParent(tempNode);
 	}
 
-	private BSTNode getRootNode(){
+	public BSTNode getRootNode(){
 		return m_objRootNode;
-	}
-	
-	private void deleteOneChildNode(BSTNode bstNode) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	private void deleteTwoChildNode(BSTNode bstNode) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	// Method to see if the tree is empty.
@@ -87,7 +107,7 @@ public class BST
     }
     
     // Method to search for an element recursively.
-    private BSTNode Search( BSTNode objNode, int nKeyValue )
+    public BSTNode Search( BSTNode objNode, int nKeyValue )
     {
     	
     	if( objNode == null )
@@ -138,13 +158,14 @@ public class BST
     //   will be called recursively.
     protected BSTNode Insert( int nKeyValue, BSTNode objNode ) 
     {
- 
+    	System.out.println("insert "+ nKeyValue);
+    	
     	// This node is null and simply needs to be allocated.
         if( objNode == null )
         {
         	objNode = new BSTNode( nKeyValue );
         }
-        
+
         // Here we need to walk left.
         else if( nKeyValue < objNode.GetKeyValue() )
         {
