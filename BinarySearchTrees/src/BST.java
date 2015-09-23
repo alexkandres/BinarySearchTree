@@ -18,74 +18,85 @@ public class BST
 		
 	}
 	
-	public boolean Delete(BSTNode node, int key){
+	public BSTNode Delete(BSTNode root, int key){
+		
+		//look for node to delete
+		BSTNode nodeFound = Search(root, key);
+		
+		System.out.println("node found = "+nodeFound.GetKeyValue());
+		System.out.println("root = "+ root.GetKeyValue());
+		
+		//find parent of node to delete
+		BSTNode parentNode = getParent(root, nodeFound);
 		
 		
 		
-		if(node == null)
-			return false;
+		if(parentNode == null)
+			System.out.println("Parent is null");
 		
-		//System.out.println("root "+node.GetKeyValue());
+		System.out.println("parent = "+parentNode.GetKeyValue());
 		
-		int key2 = node.GetKeyValue();
-		
-		if(key2 < key){
-			node = node.GetLeftNode();
+		//if node to delete is leaf
+		if(nodeFound.isLeaf()){
+			System.out.println("It is a leaf");
+			
+			//if is the right child delete right
+			if(parentNode.GetRightNode() == nodeFound){
+				
+				parentNode.SetRightNode(null);
+			}
+			
+			//if is the left child delete left
+			if(parentNode.GetLeftNode() == nodeFound){
+				
+				parentNode.SetLeftNode(null);
+			}
 		}
 		
-		else if(key2 > key){
-			node = node.GetRightNode();
+		if(nodeFound.hasOneChild()){
+			
+			//if it is the right child
+			if(nodeFound.GetRightNode() != null){
+				
+				//set the parent equal to the right of nodefound
+				parentNode.SetRightNode(nodeFound.GetRightNode());
+				nodeFound = null;
+			}
+			
+			//if left child
+			else{
+				
+				parentNode.SetLeftNode(nodeFound.GetLeftNode());
+				nodeFound = null;
+			}
 		}
 		
-		else if(node.GetKeyValue() == key){
-			System.out.println("Reached");
-			node.getParent().SetRightNode(null);
-			return true;
-		}
 			
 		
-		return Delete(node, key);
+		return null;
 	}
 
 	public BSTNode getParent(BSTNode root, BSTNode node){
 		
-		if(node == root || root == null){
+		if(root == node || root == null){
 			return null;
 		}
 		
-		if(root.GetLeftNode() == node || root.GetLeftNode() == node){
+		System.out.println("Reached getParent Method");
+		
+		//parent of mode
+		if(root.GetLeftNode() == node || root.GetRightNode() == node){
 			return root;
 		}
 		
 		if(node.GetKeyValue() < root.GetKeyValue())
 			return getParent(root.GetLeftNode(), node);
 		
-		if(node.GetKeyValue() > root.GetKeyValue())
+		else if (node.GetKeyValue() > root.GetKeyValue())
 			return getParent(root.GetRightNode(), node);
 		
-		return node;
+		return null;
 		
-	}
-	public void deleteNoChildNode(BSTNode bstNode) {
-		
-		
-
-		System.out.println("Reached here");
-		//this node is less than parent then swap left
-		if(bstNode.GetKeyValue() < bstNode.getParent().GetKeyValue()){
-			
-			BSTNode tempNode = bstNode.GetLeftNode();
-			bstNode.getParent().SetLeftNode(tempNode);;
-		}
-		
-		//swap this node with right if it is greater
-		else if(bstNode.GetKeyValue() > bstNode.getParent().GetKeyValue()){
-			
-			BSTNode tempNode = bstNode.GetRightNode();
-			bstNode.getParent().SetRightNode(tempNode);
-		}
-		//set it to the right parent
-		//bstNode.setParent(tempNode);
 	}
 
 	public BSTNode getRootNode(){

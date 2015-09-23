@@ -12,13 +12,14 @@ public class BinarySearchTrees
 		binarySearchTree.Insert(9);
 		binarySearchTree.Insert(11);
 		binarySearchTree.Insert(13);
-		binarySearchTree.Insert(14);
-		
-		System.out.println(binarySearchTree.getRootNode().GetKeyValue());
-		
-		//System.out.println(binarySearchTree.Search(13).GetKeyValue());
 
 		binarySearchTree.Delete(13);
+		
+		//still the rreight root
+//		System.out.println(binarySearchTree.getRootNode().GetKeyValue());
+		
+		System.out.println(binarySearchTree.Search(11).GetKeyValue());
+		System.out.println(binarySearchTree.Search(13).GetKeyValue());
 		
 		//System.out.println(binarySearchTree.Search(13).GetKeyValue());
 	}

@@ -62,7 +62,7 @@ public class BSTNode
 		// Assign the left node object reference.
 		
 		m_objLeftNode = objLeftNode;
-		objLeftNode.parentNode = this;
+		//parentNode = this;
 	}
 	
 	// Accessor method to set the right node.
@@ -71,7 +71,7 @@ public class BSTNode
 		// Assign the right node object reference.
 		
 		m_objRightNode = objRightNode;
-		objRightNode.parentNode = this;
+		//parentNode = this;
 	}
 	
 	// Accessor method to get the left node object.
