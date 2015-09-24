@@ -18,62 +18,98 @@ public class BST
 		
 	}
 	
+	@SuppressWarnings("unused")
 	public BSTNode Delete(BSTNode root, int key){
 		
 		//look for node to delete
-		BSTNode nodeFound = Search(root, key);
+		BSTNode nodeToDelete = Search(root, key);
 		
-		System.out.println("node found = "+nodeFound.GetKeyValue());
+		System.out.println("node found = "+nodeToDelete.GetKeyValue());
 		System.out.println("root = "+ root.GetKeyValue());
 		
 		//find parent of node to delete
-		BSTNode parentNode = getParent(root, nodeFound);
+		BSTNode parentNode = getParent(root, nodeToDelete);
 		
 		
 		
 		if(parentNode == null)
 			System.out.println("Parent is null");
 		
-		System.out.println("parent = "+parentNode.GetKeyValue());
-		
 		//if node to delete is leaf
-		if(nodeFound.isLeaf()){
+		if(nodeToDelete.isLeaf()){
 			System.out.println("It is a leaf");
 			
+			//if parent is null then it is the only one in bst
+			//Delete it
+			if(parentNode == null){
+				m_objRootNode = null;
+				return null;
+			}
 			//if is the right child delete right
-			if(parentNode.GetRightNode() == nodeFound){
+			if(parentNode.GetRightNode() == nodeToDelete){
 				
 				parentNode.SetRightNode(null);
 			}
 			
 			//if is the left child delete left
-			if(parentNode.GetLeftNode() == nodeFound){
+			if(parentNode.GetLeftNode() == nodeToDelete){
 				
 				parentNode.SetLeftNode(null);
 			}
 		}
 		
-		if(nodeFound.hasOneChild()){
+		//right child only
+		else if(nodeToDelete.hasRightChildOnly()){
+			
+			if(parentNode == null){
+				
+				m_objRootNode = nodeToDelete.GetRightNode();
+				nodeToDelete = null;
+				return root;
+			}
 			
 			//if it is the right child
-			if(nodeFound.GetRightNode() != null){
+			if(parentNode.GetRightNode() == nodeToDelete){
 				
 				//set the parent equal to the right of nodefound
-				parentNode.SetRightNode(nodeFound.GetRightNode());
-				nodeFound = null;
+				parentNode.SetRightNode(nodeToDelete.GetRightNode());
+				nodeToDelete = null;
 			}
 			
 			//if left child
 			else{
 				
-				parentNode.SetLeftNode(nodeFound.GetLeftNode());
-				nodeFound = null;
+				parentNode.SetLeftNode(nodeToDelete.GetRightNode());
+				nodeToDelete = null;
+			}
+		}
+		
+		//left child only
+		else if(nodeToDelete.hasLeftChildOnly()){
+			
+			if(parentNode == null){
+				
+				m_objRootNode = nodeToDelete.GetLeftNode();
+				nodeToDelete = null;
+				return root;
+			}
+			
+			if(parentNode.GetRightNode() == nodeToDelete){
+				
+				parentNode.SetRightNode(nodeToDelete.GetLeftNode());
+				nodeToDelete = null;
+			}
+			
+			else{
+				
+				parentNode.SetLeftNode(nodeToDelete.GetLeftNode());
+				nodeToDelete = null;
 			}
 		}
 		
 			
 		
-		return null;
+		return root;
 	}
 
 	public BSTNode getParent(BSTNode root, BSTNode node){

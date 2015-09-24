@@ -33,10 +33,26 @@ public class BSTNode
 		return false;
 	}
 	
-	public boolean hasOneChild(){
+	public boolean hasRightChildOnly(){
 		
 		//exclusive or
-		if(this.GetLeftNode() == null ^ this.GetRightNode() == null)
+		if(this.GetRightNode() != null && this.GetLeftNode() == null)
+			return true;
+		
+		return false;
+	}
+	
+	public boolean hasLeftChildOnly(){
+		
+		if(this.GetRightNode() == null && this.GetLeftNode() != null)
+			return true;
+		
+		return false;
+	}
+	
+	public boolean hasBothChild(){
+		
+		if(this.GetRightNode() != null && this.GetLeftNode() != null)
 			return true;
 		
 		return false;
