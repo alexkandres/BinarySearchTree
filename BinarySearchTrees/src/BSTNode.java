@@ -4,6 +4,8 @@ public class BSTNode
 	private BSTNode parentNode;
 	private BSTNode m_objLeftNode, m_objRightNode;
 	private int m_nKeyValue;
+	private int rank;
+	private int subTreeSize = 0;
 	
 	public BSTNode()
 	{
@@ -116,6 +118,22 @@ public class BSTNode
 	{
 		// Return the value.
 		return( m_nKeyValue );
+	}
+
+	public int getSubTreeSize() {
+		return subTreeSize;
+	}
+
+	public void setSubTreeSize(int subTreeSize) {
+		this.subTreeSize = subTreeSize;
+	}
+
+	public int getRank(int key) {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 
 }

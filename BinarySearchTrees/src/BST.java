@@ -4,6 +4,7 @@ public class BST
 	// This is the root node, which starts off as null
 	//   when the BST is empty.
 	private BSTNode m_objRootNode;
+	private boolean decrementSubtree = false;
 	
 	// Class constructor.
 	public BST()
@@ -18,25 +19,20 @@ public class BST
 		
 	}
 	
-	@SuppressWarnings("unused")
 	public void Delete(BSTNode root, int key){
+
+		//set to true so search can decrement subtree size
+		decrementSubtree = true;
 		
-	
 		//look for node to delete
 		BSTNode nodeToDelete = Search(root, key);
-		
-		System.out.println("nodeToDelete found = "+nodeToDelete.GetKeyValue());
-		System.out.println("root = "+ root.GetKeyValue());
 		
 		//find parent of node to delete
 		BSTNode parentNode = getParent(root, nodeToDelete);
 		
-		if(parentNode == null)
-			System.out.println("Parent is null");
-		
 		//if node to delete is leaf
 		if(nodeToDelete.isLeaf()){
-			System.out.println("It is a leaf");
+			//System.out.println("It is a leaf");
 			
 			//if parent is null then it is the only one in bst
 			//Delete it
@@ -115,7 +111,7 @@ public class BST
 			//get min on the right
 			BSTNode minNodeOnRight = getMinNode(nodeToDelete.GetRightNode());
 			
-			System.out.println("min node "+minNodeOnRight.GetKeyValue());
+			//System.out.println("min node "+minNodeOnRight.GetKeyValue());
 			int tempkey = minNodeOnRight.GetKeyValue();
 			
 			Delete(tempkey);
@@ -126,9 +122,9 @@ public class BST
 						
 		}
 			
-		
 		return;
 	}
+	
 	public BSTNode getMinNode(BSTNode root){
 		
 		//if left child is null then this node is the minimum
@@ -148,9 +144,6 @@ public class BST
 		
 		if(root == node || root == null)
 			return null;
-		
-		
-		System.out.println("Reached getParent Method");
 		
 		//parent of mode
 		if(root.GetLeftNode() == node || root.GetRightNode() == node){
@@ -206,6 +199,13 @@ public class BST
     		return( null );
     	}
     	
+    	if(decrementSubtree == true){
+    		
+    		//decrement if true
+    		int temp = objNode.getSubTreeSize() -1;
+    		objNode.setSubTreeSize(temp);	
+    	}
+		
     	// First, we get the key value for this node.
     	int nThisKeyValue = objNode.GetKeyValue();
             
@@ -231,6 +231,7 @@ public class BST
     	//   value that was passed in.
     	else
     	{
+    		decrementSubtree = false;
     		return( objNode );
     	}
             
@@ -255,8 +256,11 @@ public class BST
         	objNode = new BSTNode( nKeyValue );
         }
 
+        int temp = objNode.getSubTreeSize() + 1;
+    	objNode.setSubTreeSize(temp);
+    	
         // Here we need to walk left.
-        else if( nKeyValue < objNode.GetKeyValue() )
+        if( nKeyValue < objNode.GetKeyValue() )
         {
         	// Set the left node of this object by recursively walking left.
         	objNode.SetLeftNode( Insert( nKeyValue, objNode.GetLeftNode() ) );
