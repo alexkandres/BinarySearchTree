@@ -19,18 +19,17 @@ public class BST
 	}
 	
 	@SuppressWarnings("unused")
-	public BSTNode Delete(BSTNode root, int key){
+	public void Delete(BSTNode root, int key){
 		
+	
 		//look for node to delete
 		BSTNode nodeToDelete = Search(root, key);
 		
-		System.out.println("node found = "+nodeToDelete.GetKeyValue());
+		System.out.println("nodeToDelete found = "+nodeToDelete.GetKeyValue());
 		System.out.println("root = "+ root.GetKeyValue());
 		
 		//find parent of node to delete
 		BSTNode parentNode = getParent(root, nodeToDelete);
-		
-		
 		
 		if(parentNode == null)
 			System.out.println("Parent is null");
@@ -41,21 +40,24 @@ public class BST
 			
 			//if parent is null then it is the only one in bst
 			//Delete it
-			if(parentNode == null){
+			if(nodeToDelete == m_objRootNode){
 				m_objRootNode = null;
-				return null;
-			}
-			//if is the right child delete right
-			if(parentNode.GetRightNode() == nodeToDelete){
-				
-				parentNode.SetRightNode(null);
+				return;
 			}
 			
-			//if is the left child delete left
-			if(parentNode.GetLeftNode() == nodeToDelete){
-				
-				parentNode.SetLeftNode(null);
+			//if is the right child delete right
+			else if(parentNode.GetRightNode() == nodeToDelete){
+				parentNode.SetRightNode(null);
+				return;
 			}
+		
+			
+			//if is the left child delete left
+			else if(parentNode.GetLeftNode() == nodeToDelete){
+				parentNode.SetLeftNode(null);
+				return;
+			}
+			
 		}
 		
 		//right child only
@@ -65,7 +67,7 @@ public class BST
 				
 				m_objRootNode = nodeToDelete.GetRightNode();
 				nodeToDelete = null;
-				return root;
+				return;
 			}
 			
 			//if it is the right child
@@ -91,7 +93,7 @@ public class BST
 				
 				m_objRootNode = nodeToDelete.GetLeftNode();
 				nodeToDelete = null;
-				return root;
+				return;
 			}
 			
 			if(parentNode.GetRightNode() == nodeToDelete){
@@ -107,16 +109,46 @@ public class BST
 			}
 		}
 		
+		//nodetodelete has two child
+		else if(nodeToDelete.hasBothChild()){
+			
+			//get min on the right
+			BSTNode minNodeOnRight = getMinNode(nodeToDelete.GetRightNode());
+			
+			System.out.println("min node "+minNodeOnRight.GetKeyValue());
+			int tempkey = minNodeOnRight.GetKeyValue();
+			
+			Delete(tempkey);
+			nodeToDelete.SetKeyValue(tempkey);
+			
+			if(parentNode == null)
+				m_objRootNode = nodeToDelete;
+						
+		}
 			
 		
-		return root;
+		return;
+	}
+	public BSTNode getMinNode(BSTNode root){
+		
+		//if left child is null then this node is the minimum
+		if(root.GetLeftNode() == null)
+			return root;
+		
+		//recursively get min node
+		return getMinNode(root.GetLeftNode());
+	}
+	
+	public BSTNode getMax(BSTNode nodeToGetMax){
+		return nodeToGetMax;
+		
 	}
 
 	public BSTNode getParent(BSTNode root, BSTNode node){
 		
-		if(root == node || root == null){
+		if(root == node || root == null)
 			return null;
-		}
+		
 		
 		System.out.println("Reached getParent Method");
 		
@@ -135,6 +167,18 @@ public class BST
 		
 	}
 
+	public BSTNode inOrder(BSTNode node){
+		
+		if(node == null){
+			return null;
+		}
+		
+		inOrder(node.GetLeftNode());
+		System.out.print(node.GetKeyValue()+" ");
+		inOrder(node.GetRightNode());
+		
+		return null;
+	}
 	public BSTNode getRootNode(){
 		return m_objRootNode;
 	}
@@ -204,9 +248,7 @@ public class BST
     // Class protected (internal) method to insert nodes. This method
     //   will be called recursively.
     protected BSTNode Insert( int nKeyValue, BSTNode objNode ) 
-    {
-    	System.out.println("insert "+ nKeyValue);
-    	
+    {	
     	// This node is null and simply needs to be allocated.
         if( objNode == null )
         {

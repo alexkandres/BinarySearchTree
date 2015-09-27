@@ -1,3 +1,5 @@
+import java.io.ObjectInputStream.GetField;
+
 
 public class BinarySearchTrees 
 {
@@ -10,23 +12,15 @@ public class BinarySearchTrees
 		BST binarySearchTree = new BST();
 		
 		binarySearchTree.Insert(10);
-		binarySearchTree.Insert(41);
-		binarySearchTree.Insert(39);
-
-		binarySearchTree.Delete(41);
-		
-		binarySearchTree.Insert(50);
+	//	binarySearchTree.Insert(11);
+//		binarySearchTree.Insert(9);
+//		
 		binarySearchTree.Delete(10);
-		binarySearchTree.Delete(39);
-		binarySearchTree.Delete(50);
+
+		System.out.println("Search found "+binarySearchTree.Search(10));
+		BSTNode root = binarySearchTree.getRootNode();
+		binarySearchTree.inOrder(root);
 		
-		System.out.println("New root = "+binarySearchTree.getRootNode().GetKeyValue());
-		
-		//still the rreight root
-//		System.out.println(binarySearchTree.getRootNode().GetKeyValue());
-		
-		//System.out.println(binarySearchTree.Search(11).GetKeyValue());
-		//System.out.println(binarySearchTree.Search(39).GetRightNode().GetKeyValue());
 	}
 	
 }
