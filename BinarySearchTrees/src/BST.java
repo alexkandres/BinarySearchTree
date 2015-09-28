@@ -5,6 +5,8 @@ public class BST
 	//   when the BST is empty.
 	private BSTNode m_objRootNode;
 	private boolean decrementSubtree = false;
+	private int rank = 0;
+	private int kTest = 3;
 	
 	// Class constructor.
 	public BST()
@@ -26,6 +28,7 @@ public class BST
 		
 		//look for node to delete
 		BSTNode nodeToDelete = Search(root, key);
+//		BSTNode resetParent = nodeToDelete
 		
 		//find parent of node to delete
 		BSTNode parentNode = getParent(root, nodeToDelete);
@@ -56,51 +59,69 @@ public class BST
 			
 		}
 		
-		//right child only
+		//right child of nodetodelete only
 		else if(nodeToDelete.hasRightChildOnly()){
 			
 			if(parentNode == null){
 				
 				m_objRootNode = nodeToDelete.GetRightNode();
+				m_objRootNode.setParent(null);
 				nodeToDelete = null;
 				return;
 			}
 			
-			//if it is the right child
+			//if it is the right child of parent
 			if(parentNode.GetRightNode() == nodeToDelete){
 				
+				BSTNode nodeToSetParent = nodeToDelete.GetRightNode();
+				
 				//set the parent equal to the right of nodefound
-				parentNode.SetRightNode(nodeToDelete.GetRightNode());
+				parentNode.SetRightNode(nodeToSetParent);
+				nodeToSetParent.setParent(parentNode);
 				nodeToDelete = null;
 			}
 			
-			//if left child
+			//if left child of parent
 			else{
 				
-				parentNode.SetLeftNode(nodeToDelete.GetRightNode());
+				
+				BSTNode nodeToSetParent = nodeToDelete.GetRightNode();
+				parentNode.SetLeftNode(nodeToSetParent);
+				nodeToSetParent.setParent(parentNode);
 				nodeToDelete = null;
 			}
 		}
 		
-		//left child only
+		//left child only of nodeToDelete
 		else if(nodeToDelete.hasLeftChildOnly()){
 			
 			if(parentNode == null){
 				
 				m_objRootNode = nodeToDelete.GetLeftNode();
+				m_objRootNode.setParent(null);
 				nodeToDelete = null;
 				return;
 			}
 			
+			//right child of parent
 			if(parentNode.GetRightNode() == nodeToDelete){
 				
-				parentNode.SetRightNode(nodeToDelete.GetLeftNode());
+				//get node that will be shifted up
+				BSTNode nodeToSetParent = nodeToDelete.GetLeftNode();
+				parentNode.SetRightNode(nodeToSetParent);
+				nodeToSetParent.setParent(parentNode);
+				
 				nodeToDelete = null;
 			}
 			
+			//if left child of parent 
 			else{
 				
-				parentNode.SetLeftNode(nodeToDelete.GetLeftNode());
+				//get node that will e shifted up
+				BSTNode nodeToSetParent = nodeToDelete.GetLeftNode();
+				parentNode.SetLeftNode(nodeToSetParent);
+				nodeToSetParent.setParent(parentNode);
+				
 				nodeToDelete = null;
 			}
 		}
@@ -121,8 +142,22 @@ public class BST
 				m_objRootNode = nodeToDelete;
 						
 		}
-			
+		
+
+		rank(m_objRootNode);
+		rank = 0;
+
 		return;
+	}
+	
+	public BSTNode getMaxNode(BSTNode root){
+		
+		//if left child is null then this node is the minimum
+		if(root.GetRightNode() == null)
+			return root;
+		
+		//recursively get min node
+		return getMinNode(root.GetRightNode());
 	}
 	
 	public BSTNode getMinNode(BSTNode root){
@@ -133,11 +168,6 @@ public class BST
 		
 		//recursively get min node
 		return getMinNode(root.GetLeftNode());
-	}
-	
-	public BSTNode getMax(BSTNode nodeToGetMax){
-		return nodeToGetMax;
-		
 	}
 
 	public BSTNode getParent(BSTNode root, BSTNode node){
@@ -160,6 +190,20 @@ public class BST
 		
 	}
 
+	public BSTNode rank(BSTNode node){
+		
+		if(node == null){
+			return null;
+		}
+		
+		rank(node.GetLeftNode());
+		rank++;
+		node.setRank(rank);
+		rank(node.GetRightNode());
+		
+		return null;
+	}
+	
 	public BSTNode inOrder(BSTNode node){
 		
 		if(node == null){
@@ -242,8 +286,26 @@ public class BST
     // This method inserts a node based on the key value.
     public void Insert( int nKeyValue ) 
     {
+    	
     	// The root node is returned to m_objRootNode from Insert()
     	m_objRootNode = Insert( nKeyValue, m_objRootNode );
+    	
+    	// cqlculqgte rqnk
+    	rank(m_objRootNode);
+    	rank = 0;
+    	
+    	// srtg pqrent
+    	BSTNode nodeToFindParent = Search(nKeyValue);
+    	BSTNode parent = getParent(m_objRootNode, nodeToFindParent);
+    	
+    	if(parent != null && Math.abs(parent.GetKeyValue() - nKeyValue) > kTest){
+    		System.out.println("Can not be insert, greater than kTest: " + kTest);
+    		Delete(nKeyValue);
+    	}
+    	else if(parent != null && nodeToFindParent != null){
+    		nodeToFindParent.setParent(parent);
+    	}
+    	
     }    
 
     // Class protected (internal) method to insert nodes. This method
@@ -254,6 +316,7 @@ public class BST
         if( objNode == null )
         {
         	objNode = new BSTNode( nKeyValue );
+        	
         }
 
         int temp = objNode.getSubTreeSize() + 1;
@@ -269,6 +332,7 @@ public class BST
         // Here we need to talk right.
         else if( nKeyValue > objNode.GetKeyValue() )
         {
+
         	// Set the right node of this object by recursively walking right.
         	objNode.SetRightNode( Insert( nKeyValue, objNode.GetRightNode() ) );
         }

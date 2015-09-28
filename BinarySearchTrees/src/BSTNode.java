@@ -61,10 +61,10 @@ public class BSTNode
 	}
 
 	// Accessor method to set the root node.
-	public void setParent( BSTNode objParentNode)
+	public void setParent( BSTNode parentNode)
 	{
 		// Assign the left node object reference.
-		objParentNode.parentNode = objParentNode;
+		this.parentNode = parentNode;
 	}
 	
 	// Accessor method to get the right node.
@@ -128,7 +128,8 @@ public class BSTNode
 		this.subTreeSize = subTreeSize;
 	}
 
-	public int getRank(int key) {
+	public int getRank() {
+		
 		return rank;
 	}
 
